@@ -1,0 +1,57 @@
+[
+  {
+    "id": "KB001",
+    "topic": "urgency",
+    "title": "Urgent messages and threats",
+    "content": "Messages that pressure the recipient to act immediately, threaten account closure, or demand sensitive information may be phishing attempts. Urgency alone does not prove a message is malicious, but it is a strong social engineering tactic.",
+    "keywords": ["urgent", "immediately", "account blocked", "suspended", "act now", "warning"],
+    "indicator_tags": ["urgency", "threat"],
+    "source_name": "NIST",
+    "source_url": "https://www.nist.gov/itl/smallbusinesscyber/guidance-topic/phishing",
+    "recommended_action": "Verify the request through an official channel before taking action."
+  },
+  {
+    "id": "KB002",
+    "topic": "suspicious_links",
+    "title": "Unexpected links and URLs",
+    "content": "Unexpected links may lead to fake login pages or harmful websites. A URL can imitate a genuine organization using a misspelled or misleading domain. Avoid clicking unexpected links.",
+    "keywords": ["click here", "verify account", "login link", "shortened url", "http", "www"],
+    "indicator_tags": ["suspicious_url"],
+    "source_name": "CISA",
+    "source_url": "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing",
+    "recommended_action": "Do not click the link. Visit the organization's official website independently."
+  },
+  {
+    "id": "KB003",
+    "topic": "credential_requests",
+    "title": "Requests for passwords or OTPs",
+    "content": "Requests for passwords, one-time passwords (OTPs), authentication codes, or other confidential information should be treated cautiously, especially when they arrive unexpectedly. Legitimate organizations will rarely ask for credentials via email or text.",
+    "keywords": ["password", "otp", "verify details", "login", "pin", "authentication"],
+    "indicator_tags": ["credential_request"],
+    "source_name": "FBI",
+    "source_url": "https://www.fbi.gov/scams-and-safety/common-scams-and-crimes/spoofing-and-phishing",
+    "recommended_action": "Never send passwords or OTPs via email or text. Verify the request using a known, official contact method."
+  },
+  {
+    "id": "KB004",
+    "topic": "after_clicking",
+    "title": "What to do after clicking a suspicious link",
+    "content": "If you clicked a suspicious link and entered a password, immediately change the affected password through the official website or app. If you suspect malware was downloaded, run a security scan and seek trusted technical support.",
+    "keywords": ["clicked", "entered password", "malware", "downloaded", "hacked", "compromised"],
+    "indicator_tags": ["incident_response"],
+    "source_name": "FTC",
+    "source_url": "https://consumer.ftc.gov/articles/how-recognize-and-avoid-phishing-scams",
+    "recommended_action": "Change exposed passwords immediately and enable Multi-Factor Authentication (MFA)."
+  },
+  {
+    "id": "KB005",
+    "topic": "impersonation",
+    "title": "Impersonation and sender spoofing",
+    "content": "Attackers often impersonate trusted brands, banks, colleagues, or authority figures to gain trust. They may use a sense of authority to pressure you into performing tasks like buying gift cards or transferring money.",
+    "keywords": ["ceo", "manager", "it support", "microsoft support", "gift card", "wire transfer"],
+    "indicator_tags": ["impersonation"],
+    "source_name": "FTC",
+    "source_url": "https://consumer.ftc.gov/articles/how-recognize-and-avoid-phishing-scams",
+    "recommended_action": "Verify the sender's identity using a different communication channel before acting."
+  }
+]

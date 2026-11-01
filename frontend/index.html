@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <title>CyberShield - AI Security Agent</title>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <h3 class="navbar__logo">CyberShield Agent</h3>
+        <button class="navbar__button" id="themeToggler"><i class='bx bx-sun'></i></button>
+    </nav>
+
+    <header class="header">
+        <div class="header__title">
+            <h1>CyberShield AI</h1>
+            <h2>Analyze a suspicious message.</h2>
+        </div>
+        <div class="suggests">
+            <div class="suggests__item">
+                <p class="suggests__item-text">
+                    "Your bank account will be suspended today. Verify your details immediately at http://bank-secure.xyz"
+                </p>
+                <div class="suggests__item-icon">
+                    <i class='bx bx-error-circle'></i>
+                </div>
+            </div>
+            <div class="suggests__item">
+                <p class="suggests__item-text">
+                    "URGENT: You've won a $1000 gift card! Click here to claim your prize."
+                </p>
+                <div class="suggests__item-icon">
+                    <i class='bx bx-gift'></i>
+                </div>
+            </div>
+            <div class="suggests__item">
+                <p class="suggests__item-text">
+                    "Hi, this is your manager. I need you to buy gift cards for a client quickly."
+                </p>
+                <div class="suggests__item-icon">
+                    <i class='bx bx-user-voice'></i>
+                </div>
+            </div>
+            <div class="suggests__item">
+                <p class="suggests__item-text">
+                    "Your package could not be delivered. Please update your payment info here."
+                </p>
+                <div class="suggests__item-icon">
+                    <i class='bx bx-package'></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="chats"></section>
+
+    <section class="prompt">
+        <!-- <form action="#" class="prompt__form" novalidate>
+            <div class="prompt__input-wrapper">
+                <input type="text" placeholder="Paste an email, SMS, or URL here..." class="prompt__form-input" required>
+                <button class="prompt__form-button" id="sendButton">
+                    <i class='bx bx-send'></i>
+                </button>
+                <button class="prompt__form-button" id="deleteButton">
+                    <i class='bx bx-trash'></i>
+                </button>
+            </div>
+        </form> -->
+                <form action="#" class="prompt__form" novalidate>
+            <div class="prompt__input-wrapper">
+                <input type="text" placeholder="Paste an email, SMS, or URL here..." class="prompt__form-input" required>
+                
+                <!-- NEW HOME BUTTON -->
+                <button type="button" class="prompt__form-button" id="homeButton" title="Go to Home">
+                    <i class='bx bx-home'></i>
+                </button>
+
+                <button class="prompt__form-button" id="sendButton">
+                    <i class='bx bx-send'></i>
+                </button>
+                <button class="prompt__form-button" id="deleteButton">
+                    <i class='bx bx-trash'></i>
+                </button>
+            </div>
+        </form>
+        <p class="prompt__disclaim">
+            CyberShield is a warning indicator, not a guarantee. Messages are analyzed locally, and only escalated to an external LLM API when necessary.
+        </p>
+    </section>
+
+        <!-- ADD THESE LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <!-- YOUR SCRIPT (Must be last) -->
+    <script src="script.js"></script>
+</body>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="script.js"></script> -->
+
+
+</html>
