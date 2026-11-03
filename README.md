@@ -20,7 +20,7 @@ Unlike traditional black-box spam filters, CyberShield combines Machine Learning
 - **Interactive Chat Interface:** Communicate with CyberShield through a modern React-based chat interface.
 - **Conversation Management:** Create new scans, switch between conversations, and view chat history during the current session.
 
-### How CyberShield Works — 4-Tool Workflow
+### How CyberShield Works — 4-Tool Workflow  
 
 1. **Machine Learning Classification:** A Logistic Regression model trained on message datasets predicts the probability that the submitted text is malicious.
 2. **Indicator Extraction:** A Python-based rule engine uses regular expressions (Regex) to identify warning signs such as urgency, suspicious URLs, credential requests, and impersonation.
