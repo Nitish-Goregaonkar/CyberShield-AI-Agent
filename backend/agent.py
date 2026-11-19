@@ -7,8 +7,8 @@ from google.genai import types
 
 # Initialize Gemini Client
 # We will use an environment variable for the API key
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "gemini key ")
-if GEMINI_API_KEY and GEMINI_API_KEY != "replace the geminikey here":
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "replacekey")
+if GEMINI_API_KEY and GEMINI_API_KEY != "replacekey":
     client = genai.Client(api_key=GEMINI_API_KEY)
 else:
     client = None

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
+import MLLab from './MLLab';
 import { 
   Plus, 
   Search, 
@@ -17,7 +18,8 @@ import {
   X, 
   Star, 
   Menu,
-  Zap
+  Zap,
+  BrainCircuit // Added for ML Lab
 } from 'lucide-react';
 
 // Initial Mock Conversations
@@ -56,19 +58,20 @@ export default function App() {
   const [likedMap, setLikedMap] = useState<Record<string, string | null>>({});
   const [editingTitleId, setEditingTitleId] = useState<string | null>(null);
   const [tempTitle, setTempTitle] = useState('');
-  const [showProModal, setShowProModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  
+  // ML Lab State
+  const [showMLLab, setShowMLLab] = useState(false);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto scroll to bottom when new messages appear
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages, isGenerating]);
 
-  // Handle switching active conversation
   const handleSelectConversation = (id: string) => {
+    setShowMLLab(false); // Close ML Lab when switching chats
     setActiveConvId(id);
     setConversations(prev =>
       prev.map(c => ({ ...c, active: c.id === id }))
@@ -90,8 +93,8 @@ export default function App() {
     }
   };
 
-  // Create new conversation
   const handleNewChat = () => {
+    setShowMLLab(false); // Close ML Lab when making a new chat
     const newId = Date.now().toString();
     const newConv = {
       id: newId,
@@ -108,14 +111,12 @@ export default function App() {
     setMobileSidebarOpen(false);
   };
 
-  // Clear all "Your conversations"
   const handleClearAll = () => {
     if (window.confirm("Are you sure you want to clear your conversation history?")) {
       setConversations(prev => prev.filter(c => c.category !== 'Your conversations'));
     }
   };
 
-  // Delete individual conversation
   const handleDeleteConversation = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     const updated = conversations.filter(c => c.id !== id);
@@ -125,14 +126,12 @@ export default function App() {
     }
   };
 
-  // Start editing conversation title
   const handleStartEditTitle = (e: React.MouseEvent, conv: any) => {
     e.stopPropagation();
     setEditingTitleId(conv.id);
     setTempTitle(conv.title);
   };
 
-  // Save conversation title
   const handleSaveTitle = (id: string) => {
     setConversations(prev =>
       prev.map(c => (c.id === id ? { ...c, title: tempTitle || c.title } : c))
@@ -140,7 +139,6 @@ export default function App() {
     setEditingTitleId(null);
   };
 
-  // Submit User Message and call FastAPI Backend
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!inputText.trim() || isGenerating) return;
@@ -157,7 +155,6 @@ export default function App() {
     setInputText('');
     setIsGenerating(true);
 
-    // Update current conversation title if it was default
     const currentConv = conversations.find(c => c.id === activeConvId);
     if (currentConv && currentConv.title.startsWith('New Scan')) {
       const formattedTitle = userMsgText.slice(0, 24) + (userMsgText.length > 24 ? '...' : '');
@@ -167,7 +164,6 @@ export default function App() {
     }
 
     try {
-      // CONNECT TO FASTAPI BACKEND
       const response = await fetch("http://127.0.0.1:8000/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -181,7 +177,7 @@ export default function App() {
       const aiMsg = {
         id: `ai-${Date.now()}`,
         sender: 'ai',
-        text: data.explanation, // The Markdown from Python
+        text: data.explanation,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       
@@ -199,14 +195,12 @@ export default function App() {
     }
   };
 
-  // Handle Copy Text
   const handleCopy = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Handle Like/Dislike toggle
   const handleReaction = (msgId: string, type: string) => {
     setLikedMap(prev => ({
       ...prev,
@@ -214,7 +208,6 @@ export default function App() {
     }));
   };
 
-  // Filter conversations based on search
   const filteredConversations = conversations.filter(c =>
     c.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -245,7 +238,7 @@ export default function App() {
               )}
             </div>
 
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-4">
               <button
                 onClick={handleNewChat}
                 className="flex-1 bg-[#5865F2] hover:bg-[#4752C4] text-white font-semibold py-3 px-5 rounded-full flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all duration-200 active:scale-95 text-sm"
@@ -261,6 +254,15 @@ export default function App() {
               </button>
             </div>
 
+            {/* ML LAB BUTTON */}
+            <button
+              onClick={() => setShowMLLab(true)}
+              className={`w-full mb-6 flex items-center justify-center gap-2 py-3 px-5 rounded-full font-semibold shadow-md transition-all duration-200 active:scale-95 text-sm ${showMLLab ? 'bg-indigo-100 text-[#5865F2] border border-indigo-200' : 'bg-slate-800 hover:bg-slate-700 text-white'}`}
+            >
+              <BrainCircuit className="w-4 h-4" />
+              <span>ML Analytics Lab</span>
+            </button>
+
             {isSearching && (
               <div className="mb-4 relative">
                 <input
@@ -274,7 +276,7 @@ export default function App() {
               </div>
             )}
 
-            <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-340px)] pr-1 custom-scrollbar">
+            <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-380px)] pr-1 custom-scrollbar">
               <div>
                 <div className="flex items-center justify-between text-xs font-semibold text-slate-400 mb-3 px-2">
                   <span>Your conversations</span>
@@ -288,10 +290,10 @@ export default function App() {
                     <div
                       key={conv.id}
                       onClick={() => handleSelectConversation(conv.id)}
-                      className={`group relative flex items-center justify-between px-3 py-2.5 rounded-full text-xs font-medium cursor-pointer transition-all duration-150 ${conv.active ? 'bg-[#EBF0FF] text-[#5865F2] font-semibold shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
+                      className={`group relative flex items-center justify-between px-3 py-2.5 rounded-full text-xs font-medium cursor-pointer transition-all duration-150 ${conv.active && !showMLLab ? 'bg-[#EBF0FF] text-[#5865F2] font-semibold shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                        <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${conv.active ? 'text-[#5865F2]' : 'text-slate-400'}`} />
+                        <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${conv.active && !showMLLab ? 'text-[#5865F2]' : 'text-slate-400'}`} />
                         {editingTitleId === conv.id ? (
                           <input
                             type="text"
@@ -307,7 +309,7 @@ export default function App() {
                         )}
                       </div>
 
-                      {conv.active && (
+                      {conv.active && !showMLLab && (
                         <div className="flex items-center gap-1 shrink-0">
                           <button onClick={(e) => handleDeleteConversation(e, conv.id)} className="p-1 hover:bg-white rounded-full text-slate-400 hover:text-red-500 transition-colors">
                             <Trash2 className="w-3 h-3" />
@@ -343,103 +345,120 @@ export default function App() {
           </div>
         </div>
 
-        {/* MAIN CHAT VIEWPORT */}
+        {/* MAIN VIEWPORT (Conditional Rendering) */}
         <div className="flex-1 bg-white rounded-3xl flex flex-col justify-between relative shadow-sm overflow-hidden">
           
-          <div className="flex-1 overflow-y-auto px-6 md:px-16 lg:px-24 py-8 space-y-8 custom-scrollbar">
-            {chatMessages.map((msg) => (
-              <div key={msg.id} className="space-y-3 max-w-4xl mx-auto">
-                
-                {msg.sender === 'user' ? (
-                  <div className="flex items-start justify-between gap-4 group">
-                    <div className="flex items-start gap-3">
-                      <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center shrink-0 mt-0.5">
-                        <span className="text-[10px] font-bold text-slate-600">U</span>
-                      </div>
-                      <p className="text-sm font-semibold text-slate-800 pt-1 leading-relaxed">
-                        {msg.text}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center justify-center text-[10px] font-bold text-[#5865F2] tracking-wider uppercase">
-                        <span>CyberShield AI</span>
-                        <div className="w-3.5 h-3.5 ml-1 rounded-full bg-indigo-50 flex items-center justify-center border border-indigo-200">
-                          <Zap className="w-2.5 h-2.5 text-[#5865F2]" />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* REACT-MARKDOWN RENDERER */}
-                    <div className="text-xs md:text-sm text-slate-700 leading-relaxed space-y-3 pl-1 font-normal prose prose-sm max-w-none">
-                      <ReactMarkdown>{msg.text}</ReactMarkdown>
-                    </div>
-
-                    <div className="flex items-center justify-between pt-2">
-                      <div className="flex items-center gap-1 text-slate-400">
-                        <button onClick={() => handleReaction(msg.id, 'like')} className={`p-1.5 rounded hover:bg-slate-100 transition-colors ${likedMap[msg.id] === 'like' ? 'text-[#5865F2]' : 'hover:text-slate-600'}`}>
-                          <ThumbsUp className="w-3.5 h-3.5" />
-                        </button>
-                        <button onClick={() => handleReaction(msg.id, 'dislike')} className={`p-1.5 rounded hover:bg-slate-100 transition-colors ${likedMap[msg.id] === 'dislike' ? 'text-red-500' : 'hover:text-slate-600'}`}>
-                          <ThumbsDown className="w-3.5 h-3.5" />
-                        </button>
-                        <button onClick={() => handleCopy(msg.id, msg.text)} className="p-1.5 rounded hover:bg-slate-100 hover:text-slate-600 transition-colors relative">
-                          {copiedId === msg.id ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
-                        </button>
-                      </div>
-                      <button onClick={() => { setIsGenerating(true); setTimeout(() => setIsGenerating(false), 1000); }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium text-slate-600 hover:bg-slate-100 transition-colors border border-slate-200">
-                        <RotateCw className={`w-3 h-3 ${isGenerating ? 'animate-spin text-[#5865F2]' : ''}`} />
-                        <span>Regenerate</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-
-            {isGenerating && (
-              <div className="flex items-center gap-3 max-w-4xl mx-auto py-2">
-                <div className="w-2 h-2 rounded-full bg-[#5865F2] animate-bounce"></div>
-                <div className="w-2 h-2 rounded-full bg-[#5865F2] animate-bounce [animation-delay:0.2s]"></div>
-                <div className="w-2 h-2 rounded-full bg-[#5865F2] animate-bounce [animation-delay:0.4s]"></div>
-                <span className="text-xs text-slate-400 font-medium">CyberShield is analyzing...</span>
-              </div>
-            )}
-
-            <div ref={chatEndRef} />
-          </div>
-
-          {/* BOTTOM INPUT */}
-          <div className="p-4 md:px-16 lg:px-24 bg-gradient-to-t from-white via-white to-transparent">
-            <form onSubmit={handleSendMessage} className="relative max-w-3xl mx-auto">
-              <div className="flex items-center bg-white rounded-full border border-slate-200/80 shadow-lg px-4 py-2 hover:border-slate-300 focus-within:border-[#5865F2] focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
-                <div className="p-1.5 rounded-full bg-indigo-100 text-[#5865F2] mr-2 shrink-0 flex items-center justify-center">
-                  <span className="text-xs">🛡️</span>
-                </div>
-                <input
-                  type="text"
-                  placeholder="Paste a suspicious email, SMS, or link here..."
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  className="w-full bg-transparent text-xs md:text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  disabled={!inputText.trim() || isGenerating}
-                  className={`p-2.5 rounded-full transition-all duration-200 shrink-0 ml-2 ${inputText.trim() && !isGenerating ? 'bg-[#5865F2] hover:bg-[#4752C4] text-white shadow-md cursor-pointer' : 'bg-indigo-300 text-white cursor-not-allowed'}`}
-                >
-                  <Send className="w-4 h-4 transform rotate-45 -translate-x-0.5 translate-y-0.5" />
+          {showMLLab ? (
+            <div className="h-full flex flex-col">
+              <div className="flex justify-between items-center px-6 py-4 border-b border-slate-200">
+                <h2 className="text-slate-800 font-bold text-lg flex items-center gap-2">
+                  <BrainCircuit className="w-5 h-5 text-[#5865F2]" />
+                  ML Analytics Engine
+                </h2>
+                <button onClick={() => setShowMLLab(false)} className="text-sm bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition">
+                  Back to Chat
                 </button>
               </div>
-            </form>
-          </div>
+              <div className="flex-1 overflow-y-auto">
+                <MLLab />
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="flex-1 overflow-y-auto px-6 md:px-16 lg:px-24 py-8 space-y-8 custom-scrollbar">
+                {chatMessages.map((msg) => (
+                  <div key={msg.id} className="space-y-3 max-w-4xl mx-auto">
+                    
+                    {msg.sender === 'user' ? (
+                      <div className="flex items-start justify-between gap-4 group">
+                        <div className="flex items-start gap-3">
+                          <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center shrink-0 mt-0.5">
+                            <span className="text-[10px] font-bold text-slate-600">U</span>
+                          </div>
+                          <p className="text-sm font-semibold text-slate-800 pt-1 leading-relaxed">
+                            {msg.text}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center justify-center text-[10px] font-bold text-[#5865F2] tracking-wider uppercase">
+                            <span>CyberShield AI</span>
+                            <div className="w-3.5 h-3.5 ml-1 rounded-full bg-indigo-50 flex items-center justify-center border border-indigo-200">
+                              <Zap className="w-2.5 h-2.5 text-[#5865F2]" />
+                            </div>
+                          </div>
+                        </div>
 
+                        <div className="text-xs md:text-sm text-slate-700 leading-relaxed space-y-3 pl-1 font-normal prose prose-sm max-w-none">
+                          <ReactMarkdown>{msg.text}</ReactMarkdown>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-2">
+                          <div className="flex items-center gap-1 text-slate-400">
+                            <button onClick={() => handleReaction(msg.id, 'like')} className={`p-1.5 rounded hover:bg-slate-100 transition-colors ${likedMap[msg.id] === 'like' ? 'text-[#5865F2]' : 'hover:text-slate-600'}`}>
+                              <ThumbsUp className="w-3.5 h-3.5" />
+                            </button>
+                            <button onClick={() => handleReaction(msg.id, 'dislike')} className={`p-1.5 rounded hover:bg-slate-100 transition-colors ${likedMap[msg.id] === 'dislike' ? 'text-red-500' : 'hover:text-slate-600'}`}>
+                              <ThumbsDown className="w-3.5 h-3.5" />
+                            </button>
+                            <button onClick={() => handleCopy(msg.id, msg.text)} className="p-1.5 rounded hover:bg-slate-100 hover:text-slate-600 transition-colors relative">
+                              {copiedId === msg.id ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                          <button onClick={() => { setIsGenerating(true); setTimeout(() => setIsGenerating(false), 1000); }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium text-slate-600 hover:bg-slate-100 transition-colors border border-slate-200">
+                            <RotateCw className={`w-3 h-3 ${isGenerating ? 'animate-spin text-[#5865F2]' : ''}`} />
+                            <span>Regenerate</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {isGenerating && (
+                  <div className="flex items-center gap-3 max-w-4xl mx-auto py-2">
+                    <div className="w-2 h-2 rounded-full bg-[#5865F2] animate-bounce"></div>
+                    <div className="w-2 h-2 rounded-full bg-[#5865F2] animate-bounce [animation-delay:0.2s]"></div>
+                    <div className="w-2 h-2 rounded-full bg-[#5865F2] animate-bounce [animation-delay:0.4s]"></div>
+                    <span className="text-xs text-slate-400 font-medium">CyberShield is analyzing...</span>
+                  </div>
+                )}
+
+                <div ref={chatEndRef} />
+              </div>
+
+              {/* BOTTOM INPUT */}
+              <div className="p-4 md:px-16 lg:px-24 bg-gradient-to-t from-white via-white to-transparent">
+                <form onSubmit={handleSendMessage} className="relative max-w-3xl mx-auto">
+                  <div className="flex items-center bg-white rounded-full border border-slate-200/80 shadow-lg px-4 py-2 hover:border-slate-300 focus-within:border-[#5865F2] focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
+                    <div className="p-1.5 rounded-full bg-indigo-100 text-[#5865F2] mr-2 shrink-0 flex items-center justify-center">
+                      <span className="text-xs">🛡️</span>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Paste a suspicious email, SMS, or link here..."
+                      value={inputText}
+                      onChange={(e) => setInputText(e.target.value)}
+                      className="w-full bg-transparent text-xs md:text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
+                    />
+                    <button
+                      type="submit"
+                      disabled={!inputText.trim() || isGenerating}
+                      className={`p-2.5 rounded-full transition-all duration-200 shrink-0 ml-2 ${inputText.trim() && !isGenerating ? 'bg-[#5865F2] hover:bg-[#4752C4] text-white shadow-md cursor-pointer' : 'bg-indigo-300 text-white cursor-not-allowed'}`}
+                    >
+                      <Send className="w-4 h-4 transform rotate-45 -translate-x-0.5 translate-y-0.5" />
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Modals (Kept from original) */}
+      {/* Modals */}
       {showSettingsModal && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl relative">
