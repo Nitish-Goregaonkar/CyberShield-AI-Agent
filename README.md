@@ -1,20 +1,14 @@
 # 🛡️ CyberShield: Explainable AI Agent for Cybersecurity Awareness
 
-
 ## 📌 1. Project Overview
-
 
 Users often struggle to recognize suspicious emails, phishing links, and social-engineering tactics.
 
-
 **CyberShield** is a full-stack AI-powered cybersecurity awareness agent that analyzes suspicious messages, identifies warning signs, and explains the reasoning behind its risk assessment.
-
 
 Unlike traditional black-box spam filters, CyberShield combines Machine Learning, rule-based indicator extraction, and Retrieval-Augmented Generation (RAG) to provide evidence-based security explanations.
 
-
 ### Key Features
-
 
 - **Message Analysis:** Analyze suspicious email and SMS text.
 
@@ -34,9 +28,7 @@ Unlike traditional black-box spam filters, CyberShield combines Machine Learning
 
 - **Conversation Management:** Create new scans, switch between conversations, and view chat history during the current session.
 
-
-### How CyberShield Works — 4-Tool Workflow &#xA0;
-
+### How CyberShield Works — 4-Tool Workflow
 
 1. **Machine Learning Classification:** A Logistic Regression model trained on message datasets predicts the probability that the submitted text is malicious.
 
@@ -46,28 +38,21 @@ Unlike traditional black-box spam filters, CyberShield combines Machine Learning
 
 4. **Router and LLM Generation:** A smart router evaluates the available evidence:
 
-   - If the ML prediction is highly confident and multiple warning signs are detected, a local Python template generates the explanation.
+- If the ML prediction is highly confident and multiple warning signs are detected, a local Python template generates the explanation.
 
-   - If the evidence is uncertain or requires additional reasoning, the system calls the Google Gemini LLM to generate a contextual explanation.
-
+- If the evidence is uncertain or requires additional reasoning, the system calls the Google Gemini LLM to generate a contextual explanation.
 
 The system also considers prompt-injection risks when processing untrusted message content.
 
-
 > **Disclaimer:** CyberShield is a cybersecurity warning and awareness tool, not a guarantee that a message is safe or malicious. Always verify suspicious messages through official channels.
-
 
 ---
 
-
 ## 🏗️ 2. System Architecture and Technology Stack
-
 
 CyberShield follows a client-server architecture in which the React frontend communicates with the Python FastAPI backend through HTTP requests.
 
-
 ### Technology Stack
-
 
 | Component | Technology | Purpose |
 
@@ -103,18 +88,13 @@ CyberShield follows a client-server architecture in which the React frontend com
 
 | Knowledge Base | JSON | Store verified cybersecurity guidance |
 
-
 ### Frontend Overview
-
 
 The original frontend, which was developed using HTML, CSS, and Vanilla JavaScript, has been migrated to a modern **React + TypeScript application using Vite and Tailwind CSS**.
 
-
 The updated frontend provides an interactive chat-based interface for communicating with the CyberShield backend.
 
-
 **Major frontend components and functionality:**
-
 
 - **Interactive Sidebar:** Displays conversations and provides navigation between previous scans.
 
@@ -134,15 +114,11 @@ The updated frontend provides an interactive chat-based interface for communicat
 
 - **Session-Based History:** Maintains conversation history in React state while the application remains active.
 
-
 ### Frontend and Backend Communication
-
 
 The React frontend communicates with the FastAPI backend using the JavaScript `fetch()` API.
 
-
 When a user submits a message:
-
 
 1. React captures the submitted text.
 
@@ -156,32 +132,25 @@ When a user submits a message:
 
 6. React receives the response and displays the explanation using React Markdown.
 
-
 **Backend API endpoint:**
-
 
 `http://127.0.0.1:8000/analyze`
 
-
 **Request format:**
-
 
 ```json
 
 {
 
-  "message": "Your account will be blocked. Share your OTP immediately."
+"message": "Your account will be blocked. Share your OTP immediately."
 
 }
 
 ```
 
-
 ### Datasets Used
 
-
 CyberShield combines the following datasets:
-
 
 1. **UCI SMS Spam Collection:** SMS messages labelled as spam or legitimate.
 
@@ -189,12 +158,9 @@ CyberShield combines the following datasets:
 
 3. **Multiclass NLP Dataset for Phishing and Social Engineering:** Examples covering phishing, malware, scareware, baiting, pretexting, and non-malicious messages.
 
-
 **Combined dataset size:** 8,196 rows, as currently reported by the project.
 
-
 ### Model Performance
-
 
 | Evaluation Metric | Reported Result |
 
@@ -204,12 +170,9 @@ CyberShield combines the following datasets:
 
 | Malicious Message Recall | 96% |
 
-
 **Note: These are the project's reported results for the baseline message-classification workflow; they are not performance claims for every algorithm in the Threat Diagnostics Suite. For reproducibility, document the train-test split, preprocessing, class distribution, and evaluation procedure. Confirm the final dataset row count after cleaning and duplicate removal.**
 
-
 ---
-
 
 ## 🧠 3. Part 2: Threat Diagnostics Suite (Machine Learning)
 
@@ -218,9 +181,13 @@ The Threat Diagnostics Suite is a standalone machine-learning dashboard for deep
 ### Key Features
 
 - **11 algorithms and learning experiments:** Logistic Regression, Linear Regression (failure demonstration), K-Nearest Neighbors (KNN), Naive Bayes, Kernel Support Vector Machine (SVM), Perceptron, Multi-Layer Perceptron (MLP / Neural Network), Decision Trees, Random Forest, TruncatedSVD (dimensionality-reduction experiment), and PAC Learning (learning-theory experiment).
+
 - **Mathematical Explainability:** Renders mathematical formulas, including the Sigmoid function, Gini Impurity, Entropy, and Gradient Descent, alongside relevant model outputs and evaluation metrics.
+
 - **Feature Ablation and Tree Inspector:** Accepts custom message text and shows influential TF-IDF features. The interactive Decision Tree inspector displays decision paths, node impurity, and sample counts.
+
 - **Overfitting Analysis:** Compares training and testing Accuracy, Precision, Recall, and F1-score to help identify overfitting and generalization gaps.
+
 - **Advanced Evaluation:** Includes 5-fold cross-validation, ROC-AUC curves, Precision-Recall curves, confusion matrices, and a Threshold Lab for exploring how a classification threshold changes predictions in real time.
 
 > **Technical note:** Linear Regression is included as a failure demonstration for a classification task, not as a recommended classifier. TruncatedSVD is a dimensionality-reduction technique (not a classifier), while PAC Learning is a learning-theory experiment rather than a conventional predictive model.
@@ -232,40 +199,44 @@ The ML dashboard uses the same FastAPI backend and runs as a separate React fron
 **Terminal 1 — Backend (port 8000):**
 
 ```bash
+
 cd backend
+
 python main.py
+
 ```
 
 **Terminal 2 — Main CyberShield frontend:**
 
 ```bash
+
 cd frontend-react
+
 npm run dev
+
 ```
 
 **Terminal 3 — Threat Diagnostics Suite frontend:**
 
 ```bash
+
 cd frontend-react/ml-lab-ui
+
 npm run dev
+
 ```
 
 Open the local URLs printed by the Vite development servers. The ML dashboard is the separate purple-themed Threat Diagnostics Suite. Keep the backend and the frontend terminals running while using the applications.
 
 ---
 
-
 ## 🚀 4. Setup and Installation Guide
-
 
 Follow these steps to set up and run CyberShield on your local machine.
 
-
 ### Prerequisites
 
-
 Make sure the following software is installed:
-
 
 - **Python 3.13 or compatible version**
 
@@ -275,12 +246,9 @@ Make sure the following software is installed:
 
 - **Visual Studio Code** (recommended)
 
-
 ### Step 1: Clone the Repository
 
-
 Open your terminal and execute:
-
 
 ```bash
 
@@ -288,9 +256,7 @@ git clone https://github.com/Nitish-Goregaonkar/CyberShield-AI-Agent.git
 
 ```
 
-
 Navigate to the project directory:
-
 
 ```bash
 
@@ -298,15 +264,11 @@ cd CyberShield-AI-Agent
 
 ```
 
-
 ### Step 2: Create a Python Virtual Environment
-
 
 A virtual environment keeps project dependencies separate from your system-wide Python installation.
 
-
 Create the environment:
-
 
 ```bash
 
@@ -314,9 +276,7 @@ python -m venv venv
 
 ```
 
-
 **Activate on Windows (PowerShell):**
-
 
 ```powershell
 
@@ -324,9 +284,7 @@ venv\Scripts\Activate.ps1
 
 ```
 
-
 **Activate on Windows (Command Prompt):**
-
 
 ```cmd
 
@@ -334,9 +292,7 @@ venv\Scripts\activate
 
 ```
 
-
 **Activate on macOS/Linux:**
-
 
 ```bash
 
@@ -344,15 +300,11 @@ source venv/bin/activate
 
 ```
 
-
 Once activated, your terminal should display `(venv)`.
-
 
 ### Step 3: Install Backend Dependencies
 
-
 With the virtual environment active, install the required Python packages:
-
 
 ```bash
 
@@ -360,9 +312,7 @@ python -m pip install fastapi uvicorn scikit-learn pandas numpy matplotlib googl
 
 ```
 
-
 These packages provide the backend framework, machine learning algorithms, numerical and tabular data processing, plotting support, Gemini integration, Excel-file handling, model persistence, and environment-variable support.
-
 
 ### Step 4: Install Frontend Dependencies
 
@@ -371,28 +321,30 @@ The repository contains two React applications: the main CyberShield chat interf
 **Main CyberShield frontend:**
 
 ```bash
+
 cd frontend-react
+
 npm install
+
 ```
 
 **Threat Diagnostics Suite frontend:**
 
 ```bash
+
 cd frontend-react/ml-lab-ui
+
 npm install
+
 ```
 
 Run each command from the project root in its own terminal, or return to the project root before navigating to the second directory. Each frontend has its own `package.json` file.
 
-
 ### Step 5: Configure the Gemini API Key
-
 
 CyberShield uses Google Gemini to generate additional explanations when the local ML model and rule-based evidence require further reasoning.
 
-
 **1. Generate an API key**
-
 
 - Visit [Google AI Studio](https://aistudio.google.com/app/apikey).
 
@@ -400,12 +352,9 @@ CyberShield uses Google Gemini to generate additional explanations when the loca
 
 - Create an API key and copy it.
 
-
 **2. Configure the environment variable**
 
-
 For Windows PowerShell:
-
 
 ```powershell
 
@@ -413,9 +362,7 @@ $env:GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
 
 ```
 
-
 For Windows Command Prompt:
-
 
 ```cmd
 
@@ -423,9 +370,7 @@ set GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 
 ```
 
-
 For macOS/Linux:
-
 
 ```bash
 
@@ -433,34 +378,25 @@ export GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
 
 ```
 
-
 **3. Access the key from your backend**
 
-
 In `backend/agent.py`, retrieve the key using:
-
 
 ```python
 
 import os
 
-
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 ```
 
-
 Do not paste your real API key into frontend React or TypeScript files or commit it to GitHub.
-
 
 If you prefer using a `.env` file, install and use `python-dotenv`, load it with `load_dotenv()`, and add `.env` to `.gitignore`.
 
-
 ### Step 6: Run the Backend Server
 
-
 Open a terminal and navigate to the backend directory from the project root:
-
 
 ```bash
 
@@ -468,9 +404,7 @@ cd backend
 
 ```
 
-
 Start the FastAPI backend:
-
 
 ```bash
 
@@ -478,15 +412,11 @@ python main.py
 
 ```
 
-
 Keep this terminal open while using the application.
-
 
 The backend should be accessible at:
 
-
 `http://127.0.0.1:8000`
-
 
 ### Step 7: Run Both React Frontends
 
@@ -495,15 +425,21 @@ Keep the FastAPI backend running in Terminal 1. Start each frontend in a separat
 **Terminal 2 — Main CyberShield UI:**
 
 ```bash
+
 cd frontend-react
+
 npm run dev
+
 ```
 
 **Terminal 3 — Threat Diagnostics Suite:**
 
 ```bash
+
 cd frontend-react/ml-lab-ui
+
 npm run dev
+
 ```
 
 Each Vite server prints its local URL in the terminal. Open the corresponding URL in your browser. The default port is often `5173`, but Vite may select another available port if that one is already in use.
@@ -512,27 +448,19 @@ Each Vite server prints its local URL in the terminal. Open the corresponding UR
 
 ---
 
-
 ## 🧪 5. Testing the CyberShield Agent
-
 
 After launching the application, enter the following sample messages into the CyberShield chat interface to test its workflow.
 
-
 ### Test Case 1: High-Confidence Phishing Message
-
 
 **Expected behaviour:** The ML model and rule engine identify multiple suspicious indicators. The router uses a local Python template when its confidence and evidence conditions are met.
 
-
 **Sample message:**
-
 
 > URGENT: Your Netflix account is on hold. We could not validate your billing information. Please update your payment details immediately at http://netflix-billing-update.com to avoid suspension.
 
-
 **Indicators to identify:**
-
 
 - Urgent language and pressure.
 
@@ -542,21 +470,15 @@ After launching the application, enter the following sample messages into the Cy
 
 - Threat of account suspension.
 
-
 ### Test Case 2: Potential Social-Engineering Message
-
 
 **Expected behaviour:** The message may require additional contextual analysis. If the router's uncertainty conditions are met, Gemini generates a cautious explanation.
 
-
 **Sample message:**
-
 
 > Hi, this is Sarah from the HR department. Are you at your desk? I need you to quickly review a confidential document before our meeting. Let me know when you are free.
 
-
 **Potential indicators:**
-
 
 - Claimed authority or identity.
 
@@ -564,33 +486,23 @@ After launching the application, enter the following sample messages into the Cy
 
 - Pressure to respond quickly.
 
-
 **This is an ambiguous example, not proof of an attack. A legitimate HR employee could send a similar message.**
-
 
 ### Test Case 3: Normal Personal Message
 
-
 **Expected behaviour:** The model predicts a low malicious probability, and the system returns a low-risk assessment.
-
 
 **Sample message:**
 
-
 > Hey mom, just letting you know I will be home around 7 PM tonight. Do you want me to pick up some pizza on the way back?
-
 
 **Expected result:** Low Signal / Low Risk.
 
-
 ---
-
 
 ## 👥 6. Project Team
 
-
 This project was developed as part of the B.Tech curriculum.
-
 
 | Team Member | PRN NO. |
 
@@ -598,14 +510,9 @@ This project was developed as part of the B.Tech curriculum.
 
 | Nitish Naresh Goregaonkar | 2503033111245507 |
 
-
-
-
 ---
 
-
 ## 📜 7. References and Bibliography
-
 
 | Source / Organization | Title and Description | Link |
 
@@ -637,14 +544,10 @@ This project was developed as part of the B.Tech curriculum.
 
 | React Markdown | React Markdown Documentation — Documentation for rendering Markdown content in React. | [View Documentation](https://github.com/remarkjs/react-markdown) |
 
-
 ---
-
 
 ## 📄 8. License
 
-
 This project was developed for academic and educational purposes as part of the B.Tech curriculum.
-
 
 Dataset usage remains subject to the respective dataset licenses and terms of use.
