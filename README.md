@@ -11,36 +11,23 @@ Unlike traditional black-box spam filters, CyberShield combines Machine Learning
 ### Key Features
 
 - **Message Analysis:** Analyze suspicious email and SMS text.
-
 - **Phishing Detection:** Predict whether a message may be malicious.
-
 - **Red-Flag Identification:** Highlight suspicious phrases, URLs, urgency, credential requests, and impersonation attempts.
-
 - **Explainable Results:** Explain why a message has been flagged.
-
 - **Cybersecurity Knowledge Retrieval:** Retrieve relevant guidance from trusted sources such as CISA, NIST, and the FTC.
-
 - **Safe-Response Checklist:** Provide practical steps to take when a suspicious message is detected.
-
 - **AI-Powered Explanations:** Use Google Gemini when additional reasoning is required.
-
 - **Interactive Chat Interface:** Communicate with CyberShield through a modern React-based chat interface.
-
 - **Conversation Management:** Create new scans, switch between conversations, and view chat history during the current session.
 
 ### How CyberShield Works — 4-Tool Workflow
 
 1. **Machine Learning Classification:** A Logistic Regression model trained on message datasets predicts the probability that the submitted text is malicious.
-
 2. **Indicator Extraction:** A Python-based rule engine uses regular expressions (Regex) to identify warning signs such as urgency, suspicious URLs, credential requests, and impersonation.
-
 3. **Knowledge Retrieval:** The system matches identified indicators with a curated JSON knowledge base containing cybersecurity guidance from trusted sources.
-
 4. **Router and LLM Generation:** A smart router evaluates the available evidence:
-
-- If the ML prediction is highly confident and multiple warning signs are detected, a local Python template generates the explanation.
-
-- If the evidence is uncertain or requires additional reasoning, the system calls the Google Gemini LLM to generate a contextual explanation.
+   - If the ML prediction is highly confident and multiple warning signs are detected, a local Python template generates the explanation.
+   - If the evidence is uncertain or requires additional reasoning, the system calls the Google Gemini LLM to generate a contextual explanation.
 
 The system also considers prompt-injection risks when processing untrusted message content.
 
@@ -55,37 +42,21 @@ CyberShield follows a client-server architecture in which the React frontend com
 ### Technology Stack
 
 | Component | Technology | Purpose |
-
-|---|---|---|
-
+| :--- | :--- | :--- |
 | Frontend Framework | React | Build an interactive and component-based user interface |
-
 | Frontend Build Tool | Vite | Development server and frontend build process |
-
 | Programming Language | TypeScript | Add static typing and improve frontend code reliability |
-
 | Styling | Tailwind CSS | Create a responsive and modern user interface |
-
 | Icons | Lucide React | Provide consistent interface icons |
-
 | Markdown Rendering | React Markdown (`react-markdown`) | Render formatted explanations returned by the backend |
-
 | Frontend State Management | React Hooks (`useState`, `useEffect`) | Manage messages, conversations, loading states, and UI interactions |
-
 | Backend | Python 3.13, FastAPI | Handle API requests and application logic |
-
 | Server | Uvicorn | Run the FastAPI application |
-
 | Machine Learning | Scikit-learn | Train and execute the classification model |
-
 | Text Processing | TF-IDF | Convert messages into numerical features |
-
 | Data Processing | Pandas | Load and process datasets |
-
 | Model Storage | Joblib | Save and load trained ML models |
-
 | LLM Integration | Google GenAI SDK | Generate contextual explanations |
-
 | Knowledge Base | JSON | Store verified cybersecurity guidance |
 
 ### Frontend Overview
@@ -97,21 +68,13 @@ The updated frontend provides an interactive chat-based interface for communicat
 **Major frontend components and functionality:**
 
 - **Interactive Sidebar:** Displays conversations and provides navigation between previous scans.
-
 - **New Scan:** Allows users to start a fresh conversation.
-
 - **Dynamic Conversation Titles:** Automatically generates a conversation title based on the first user message.
-
 - **Chat Interface:** Displays user messages and CyberShield's analysis in separate chat bubbles.
-
 - **Loading Animation:** Displays three bouncing dots while the backend processes a submitted message.
-
 - **Markdown Rendering:** Uses React Markdown to display structured backend responses, including headings, bullet points, and bold text.
-
 - **Message Actions:** Provides copy, like, and dislike buttons for interacting with responses.
-
 - **Responsive Design:** Uses Tailwind CSS to adapt the interface to different screen sizes.
-
 - **Session-Based History:** Maintains conversation history in React state while the application remains active.
 
 ### Frontend and Backend Communication
@@ -121,31 +84,24 @@ The React frontend communicates with the FastAPI backend using the JavaScript `f
 When a user submits a message:
 
 1. React captures the submitted text.
-
 2. The frontend sends a POST request to the backend's `/analyze` endpoint.
-
 3. The message is sent in JSON format.
-
 4. FastAPI processes the message using the CyberShield detection workflow.
-
 5. The backend returns a JSON response containing the analysis.
-
 6. React receives the response and displays the explanation using React Markdown.
 
-**Backend API endpoint:**
+**Backend API Endpoint:**
 
-`http://127.0.0.1:8000/analyze`
+```text
+POST http://127.0.0.1:8000/analyze
+```
 
-**Request format:**
+**Request Format:**
 
 ```json
-
 {
-
-"message": "Your account will be blocked. Share your OTP immediately."
-
+  "message": "Your account will be blocked. Share your OTP immediately."
 }
-
 ```
 
 ### Datasets Used
@@ -153,24 +109,19 @@ When a user submits a message:
 CyberShield combines the following datasets:
 
 1. **UCI SMS Spam Collection:** SMS messages labelled as spam or legitimate.
-
 2. **Phishing Validation Emails Dataset:** Email samples labelled as safe or phishing.
-
 3. **Multiclass NLP Dataset for Phishing and Social Engineering:** Examples covering phishing, malware, scareware, baiting, pretexting, and non-malicious messages.
 
-**Combined dataset size:** 8,196 rows, as currently reported by the project.
+- **Combined Dataset Size:** `8,196 rows` (as currently reported by the project).
 
 ### Model Performance
 
 | Evaluation Metric | Reported Result |
-
-|---|---:|
-
+| :--- | :--- |
 | Overall Accuracy | 98% |
-
 | Malicious Message Recall | 96% |
 
-**Note: These are the project's reported results for the baseline message-classification workflow; they are not performance claims for every algorithm in the Threat Diagnostics Suite. For reproducibility, document the train-test split, preprocessing, class distribution, and evaluation procedure. Confirm the final dataset row count after cleaning and duplicate removal.**
+> **Note:** These are the project's reported results for the baseline message-classification workflow; they are not performance claims for every algorithm in the Threat Diagnostics Suite. For reproducibility, document the train-test split, preprocessing, class distribution, and evaluation procedure. Confirm the final dataset row count after cleaning and duplicate removal.
 
 ---
 
@@ -180,50 +131,34 @@ The Threat Diagnostics Suite is a standalone machine-learning dashboard for deep
 
 ### Key Features
 
-- **11 algorithms and learning experiments:** Logistic Regression, Linear Regression (failure demonstration), K-Nearest Neighbors (KNN), Naive Bayes, Kernel Support Vector Machine (SVM), Perceptron, Multi-Layer Perceptron (MLP / Neural Network), Decision Trees, Random Forest, TruncatedSVD (dimensionality-reduction experiment), and PAC Learning (learning-theory experiment).
-
+- **11 Algorithms and Learning Experiments:** Logistic Regression, Linear Regression (failure demonstration), K-Nearest Neighbors (KNN), Naive Bayes, Kernel Support Vector Machine (SVM), Perceptron, Multi-Layer Perceptron (MLP / Neural Network), Decision Trees, Random Forest, TruncatedSVD (dimensionality-reduction experiment), and PAC Learning (learning-theory experiment).
 - **Mathematical Explainability:** Renders mathematical formulas, including the Sigmoid function, Gini Impurity, Entropy, and Gradient Descent, alongside relevant model outputs and evaluation metrics.
-
 - **Feature Ablation and Tree Inspector:** Accepts custom message text and shows influential TF-IDF features. The interactive Decision Tree inspector displays decision paths, node impurity, and sample counts.
-
 - **Overfitting Analysis:** Compares training and testing Accuracy, Precision, Recall, and F1-score to help identify overfitting and generalization gaps.
-
 - **Advanced Evaluation:** Includes 5-fold cross-validation, ROC-AUC curves, Precision-Recall curves, confusion matrices, and a Threshold Lab for exploring how a classification threshold changes predictions in real time.
 
-> **Technical note:** Linear Regression is included as a failure demonstration for a classification task, not as a recommended classifier. TruncatedSVD is a dimensionality-reduction technique (not a classifier), while PAC Learning is a learning-theory experiment rather than a conventional predictive model.
+> **Technical Note:** Linear Regression is included as a failure demonstration for a classification task, not as a recommended classifier. TruncatedSVD is a dimensionality-reduction technique (not a classifier), while PAC Learning is a learning-theory experiment rather than a conventional predictive model.
 
 ### How to Run the ML Diagnostics UI
 
 The ML dashboard uses the same FastAPI backend and runs as a separate React frontend. Start the backend first, then launch both frontend applications in separate terminals.
 
-**Terminal 1 — Backend (port 8000):**
-
+**Terminal 1 — Backend (Port 8000):**
 ```bash
-
 cd backend
-
 python main.py
-
 ```
 
-**Terminal 2 — Main CyberShield frontend:**
-
+**Terminal 2 — Main CyberShield Frontend:**
 ```bash
-
 cd frontend-react
-
 npm run dev
-
 ```
 
-**Terminal 3 — Threat Diagnostics Suite frontend:**
-
+**Terminal 3 — Threat Diagnostics Suite Frontend:**
 ```bash
-
 cd frontend-react/ml-lab-ui
-
 npm run dev
-
 ```
 
 Open the local URLs printed by the Vite development servers. The ML dashboard is the separate purple-themed Threat Diagnostics Suite. Keep the backend and the frontend terminals running while using the applications.
@@ -237,31 +172,21 @@ Follow these steps to set up and run CyberShield on your local machine.
 ### Prerequisites
 
 Make sure the following software is installed:
-
-- **Python 3.13 or compatible version**
-
-- **Node.js and npm**
-
-- **Git**
-
-- **Visual Studio Code** (recommended)
+- Python 3.13 or compatible version
+- Node.js and npm
+- Git
+- Visual Studio Code (recommended)
 
 ### Step 1: Clone the Repository
 
 Open your terminal and execute:
-
 ```bash
-
 git clone https://github.com/Nitish-Goregaonkar/CyberShield-AI-Agent.git
-
 ```
 
 Navigate to the project directory:
-
 ```bash
-
 cd CyberShield-AI-Agent
-
 ```
 
 ### Step 2: Create a Python Virtual Environment
@@ -269,35 +194,23 @@ cd CyberShield-AI-Agent
 A virtual environment keeps project dependencies separate from your system-wide Python installation.
 
 Create the environment:
-
 ```bash
-
 python -m venv venv
-
 ```
 
-**Activate on Windows (PowerShell):**
-
+Activate on Windows (PowerShell):
 ```powershell
-
 venv\Scripts\Activate.ps1
-
 ```
 
-**Activate on Windows (Command Prompt):**
-
+Activate on Windows (Command Prompt):
 ```cmd
-
 venv\Scripts\activate
-
 ```
 
-**Activate on macOS/Linux:**
-
+Activate on macOS/Linux:
 ```bash
-
 source venv/bin/activate
-
 ```
 
 Once activated, your terminal should display `(venv)`.
@@ -305,11 +218,8 @@ Once activated, your terminal should display `(venv)`.
 ### Step 3: Install Backend Dependencies
 
 With the virtual environment active, install the required Python packages:
-
 ```bash
-
 python -m pip install fastapi uvicorn scikit-learn pandas numpy matplotlib google-genai python-multipart openpyxl joblib python-dotenv
-
 ```
 
 These packages provide the backend framework, machine learning algorithms, numerical and tabular data processing, plotting support, Gemini integration, Excel-file handling, model persistence, and environment-variable support.
@@ -318,24 +228,16 @@ These packages provide the backend framework, machine learning algorithms, numer
 
 The repository contains two React applications: the main CyberShield chat interface and the standalone Threat Diagnostics Suite. Install dependencies for each application separately.
 
-**Main CyberShield frontend:**
-
+**Main CyberShield Frontend:**
 ```bash
-
 cd frontend-react
-
 npm install
-
 ```
 
-**Threat Diagnostics Suite frontend:**
-
+**Threat Diagnostics Suite Frontend:**
 ```bash
-
 cd frontend-react/ml-lab-ui
-
 npm install
-
 ```
 
 Run each command from the project root in its own terminal, or return to the project root before navigating to the second directory. Each frontend has its own `package.json` file.
@@ -344,107 +246,74 @@ Run each command from the project root in its own terminal, or return to the pro
 
 CyberShield uses Google Gemini to generate additional explanations when the local ML model and rule-based evidence require further reasoning.
 
-**1. Generate an API key**
+1. **Generate an API key:**
+   - Visit [Google AI Studio](https://aistudio.google.com/).
+   - Sign in with your Google account.
+   - Create an API key and copy it.
 
-- Visit [Google AI Studio](https://aistudio.google.com/app/apikey).
+2. **Configure the environment variable:**
 
-- Sign in with your Google account.
+   **For Windows PowerShell:**
+   ```powershell
+   $env:GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
+   ```
 
-- Create an API key and copy it.
+   **For Windows Command Prompt:**
+   ```cmd
+   set GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+   ```
 
-**2. Configure the environment variable**
+   **For macOS/Linux:**
+   ```bash
+   export GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
+   ```
 
-For Windows PowerShell:
+3. **Access the key from your backend:**
 
-```powershell
+   In `backend/agent.py`, retrieve the key using:
+   ```python
+   import os
+   GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+   ```
 
-$env:GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
-
-```
-
-For Windows Command Prompt:
-
-```cmd
-
-set GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-
-```
-
-For macOS/Linux:
-
-```bash
-
-export GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
-
-```
-
-**3. Access the key from your backend**
-
-In `backend/agent.py`, retrieve the key using:
-
-```python
-
-import os
-
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-
-```
-
-Do not paste your real API key into frontend React or TypeScript files or commit it to GitHub.
-
-If you prefer using a `.env` file, install and use `python-dotenv`, load it with `load_dotenv()`, and add `.env` to `.gitignore`.
+> **Security Warning:** Do not paste your real API key into frontend React or TypeScript files or commit it to GitHub. If you prefer using a `.env` file, install and use `python-dotenv`, load it with `load_dotenv()`, and add `.env` to `.gitignore`.
 
 ### Step 6: Run the Backend Server
 
 Open a terminal and navigate to the backend directory from the project root:
-
 ```bash
-
 cd backend
-
 ```
 
 Start the FastAPI backend:
-
 ```bash
-
 python main.py
-
 ```
 
-Keep this terminal open while using the application.
-
-The backend should be accessible at:
-
-`http://127.0.0.1:8000`
+Keep this terminal open while using the application. The backend should be accessible at:
+```text
+http://127.0.0.1:8000
+```
 
 ### Step 7: Run Both React Frontends
 
 Keep the FastAPI backend running in Terminal 1. Start each frontend in a separate terminal from the project root.
 
 **Terminal 2 — Main CyberShield UI:**
-
 ```bash
-
 cd frontend-react
-
 npm run dev
-
 ```
 
 **Terminal 3 — Threat Diagnostics Suite:**
-
 ```bash
-
 cd frontend-react/ml-lab-ui
-
 npm run dev
-
 ```
 
 Each Vite server prints its local URL in the terminal. Open the corresponding URL in your browser. The default port is often `5173`, but Vite may select another available port if that one is already in use.
 
-**Important:** Keep the backend and whichever frontend(s) you are using running. Both frontends communicate with the FastAPI backend on port `8000`.
+> **Important:** Keep the backend and whichever frontend(s) you are using running. Both frontends communicate with the FastAPI backend on port `8000`.
 
 ---
 
@@ -453,50 +322,30 @@ Each Vite server prints its local URL in the terminal. Open the corresponding UR
 After launching the application, enter the following sample messages into the CyberShield chat interface to test its workflow.
 
 ### Test Case 1: High-Confidence Phishing Message
-
-**Expected behaviour:** The ML model and rule engine identify multiple suspicious indicators. The router uses a local Python template when its confidence and evidence conditions are met.
-
-**Sample message:**
-
-> URGENT: Your Netflix account is on hold. We could not validate your billing information. Please update your payment details immediately at http://netflix-billing-update.com to avoid suspension.
-
-**Indicators to identify:**
-
-- Urgent language and pressure.
-
-- Suspicious external URL.
-
-- Request for payment information.
-
-- Threat of account suspension.
+- **Expected Behaviour:** The ML model and rule engine identify multiple suspicious indicators. The router uses a local Python template when its confidence and evidence conditions are met.
+- **Sample Message:**
+  > `URGENT: Your Netflix account is on hold. We could not validate your billing information. Please update your payment details immediately at http://netflix-billing-update.com to avoid suspension.`
+- **Indicators to Identify:**
+  - Urgent language and pressure.
+  - Suspicious external URL.
+  - Request for payment information.
+  - Threat of account suspension.
 
 ### Test Case 2: Potential Social-Engineering Message
-
-**Expected behaviour:** The message may require additional contextual analysis. If the router's uncertainty conditions are met, Gemini generates a cautious explanation.
-
-**Sample message:**
-
-> Hi, this is Sarah from the HR department. Are you at your desk? I need you to quickly review a confidential document before our meeting. Let me know when you are free.
-
-**Potential indicators:**
-
-- Claimed authority or identity.
-
-- Request involving confidential information.
-
-- Pressure to respond quickly.
-
-**This is an ambiguous example, not proof of an attack. A legitimate HR employee could send a similar message.**
+- **Expected Behaviour:** The message may require additional contextual analysis. If the router's uncertainty conditions are met, Gemini generates a cautious explanation.
+- **Sample Message:**
+  > `Hi, this is Sarah from the HR department. Are you at your desk? I need you to quickly review a confidential document before our meeting. Let me know when you are free.`
+- **Potential Indicators:**
+  - Claimed authority or identity.
+  - Request involving confidential information.
+  - Pressure to respond quickly.
+  - *Note: This is an ambiguous example, not proof of an attack. A legitimate HR employee could send a similar message.*
 
 ### Test Case 3: Normal Personal Message
-
-**Expected behaviour:** The model predicts a low malicious probability, and the system returns a low-risk assessment.
-
-**Sample message:**
-
-> Hey mom, just letting you know I will be home around 7 PM tonight. Do you want me to pick up some pizza on the way back?
-
-**Expected result:** Low Signal / Low Risk.
+- **Expected Behaviour:** The model predicts a low malicious probability, and the system returns a low-risk assessment.
+- **Sample Message:**
+  > `Hey mom, just letting you know I will be home around 7 PM tonight. Do you want me to pick up some pizza on the way back?`
+- **Expected Result:** Low Signal / Low Risk.
 
 ---
 
@@ -504,45 +353,29 @@ After launching the application, enter the following sample messages into the Cy
 
 This project was developed as part of the B.Tech curriculum.
 
-| Team Member | PRN NO. |
-
-|---|---|
-
-| Nitish Naresh Goregaonkar | 2503033111245507 |
+| Team Member | PRN No. |
+| :--- | :--- |
+| Nitish Naresh Goregaonkar | `2503033111245507` |
 
 ---
 
 ## 📜 7. References and Bibliography
 
 | Source / Organization | Title and Description | Link |
-
-|---|---|---|
-
-| NIST | Phishing Guidance for Small Businesses — Guidance on recognizing phishing and social-engineering threats. | [Visit NIST](https://www.nist.gov/itl/smallbusinesscyber/guidance-topic/phishing) |
-
-| CISA | Recognize and Report Phishing — Guidance on identifying suspicious links, unexpected attachments, and reporting phishing. | [Visit CISA](https://www.cisa.gov/secure-our-world/recognize-and-report-phishing) |
-
-| FTC | How to Recognize and Avoid Phishing Scams — Consumer guidance on recognizing phishing and responding safely. | [Visit FTC](https://consumer.ftc.gov/articles/how-recognize-and-avoid-phishing-scams) |
-
-| UCI Machine Learning Repository | SMS Spam Collection Dataset — Public SMS dataset used for baseline text classification. | [View Dataset](https://archive.ics.uci.edu/dataset/228/sms+spam+collection) |
-
-| Zenodo | Phishing Validation Emails Dataset (Miltchev et al.) — Email samples labelled as safe or phishing. | [View Dataset](https://zenodo.org/records/13378848) |
-
-| Zenodo | Multiclass NLP Dataset for Phishing and Social Engineering — Dataset covering phishing, malware, scareware, baiting, pretexting, and non-malicious messages. | [View Dataset](https://zenodo.org/records/15235123) |
-
-| Google AI | Gemini API Documentation — Documentation for integrating Gemini into applications. | [View Documentation](https://ai.google.dev/gemini-api/docs) |
-
-| React | React Documentation — Documentation for building component-based user interfaces. | [View Documentation](https://react.dev/learn) |
-
-| Vite | Vite Documentation — Documentation for frontend development and build tooling. | [View Documentation](https://vite.dev/guide/) |
-
-| TypeScript | TypeScript Documentation — Documentation for static typing in JavaScript applications. | [View Documentation](https://www.typescriptlang.org/docs/) |
-
-| Tailwind CSS | Tailwind CSS Documentation — Documentation for utility-first CSS styling. | [View Documentation](https://tailwindcss.com/docs) |
-
-| Lucide | Lucide Icons — Open-source icon library used in the React frontend. | [View Documentation](https://lucide.dev/guide/packages/lucide-react) |
-
-| React Markdown | React Markdown Documentation — Documentation for rendering Markdown content in React. | [View Documentation](https://github.com/remarkjs/react-markdown) |
+| :--- | :--- | :--- |
+| **NIST** | Phishing Guidance for Small Businesses — Guidance on recognizing phishing and social-engineering threats. | [Visit NIST](https://www.nist.gov/itl/smallbusinesscyber/guidance-topic/phishing) |
+| **CISA** | Recognize and Report Phishing — Guidance on identifying suspicious links, unexpected attachments, and reporting phishing. | [Visit CISA](https://www.cisa.gov/secure-our-world/recognize-and-report-phishing) |
+| **FTC** | How to Recognize and Avoid Phishing Scams — Consumer guidance on recognizing phishing and responding safely. | [Visit FTC](https://consumer.ftc.gov/articles/how-recognize-and-avoid-phishing-scams) |
+| **UCI Machine Learning Repository** | SMS Spam Collection Dataset — Public SMS dataset used for baseline text classification. | [View Dataset](https://archive.ics.uci.edu/dataset/228/sms+spam+collection) |
+| **Zenodo** | Phishing Validation Emails Dataset (Miltchev et al.) — Email samples labelled as safe or phishing. | [View Dataset](https://zenodo.org/) |
+| **Zenodo** | Multiclass NLP Dataset for Phishing and Social Engineering — Dataset covering phishing, malware, scareware, baiting, pretexting, and non-malicious messages. | [View Dataset](https://zenodo.org/) |
+| **Google AI** | Gemini API Documentation — Documentation for integrating Gemini into applications. | [View Documentation](https://ai.google.dev/gemini-api/docs) |
+| **React** | React Documentation — Documentation for building component-based user interfaces. | [View Documentation](https://react.dev/) |
+| **Vite** | Vite Documentation — Documentation for frontend development and build tooling. | [View Documentation](https://vite.dev/) |
+| **TypeScript** | TypeScript Documentation — Documentation for static typing in JavaScript applications. | [View Documentation](https://www.typescriptlang.org/docs/) |
+| **Tailwind CSS** | Tailwind CSS Documentation — Documentation for utility-first CSS styling. | [View Documentation](https://tailwindcss.com/docs) |
+| **Lucide** | Lucide Icons — Open-source icon library used in the React frontend. | [View Documentation](https://lucide.dev/) |
+| **React Markdown** | React Markdown Documentation — Documentation for rendering Markdown content in React. | [View Documentation](https://github.com/remarkjs/react-markdown) |
 
 ---
 
